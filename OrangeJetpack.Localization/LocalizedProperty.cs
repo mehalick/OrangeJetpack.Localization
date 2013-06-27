@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -10,7 +11,25 @@ namespace OrangeJetpack.Localization
 {
     public class LocalizedProperty
     {
-        public const string DefaultLanguage = "en";
+        /// <summary>
+        /// The default language to use when a language is needed.
+        /// </summary>
+        /// <returns>The first language in AppSettings["LocalizationLanguages"] or "en" if no settings.</returns>
+        public static string DefaultLanguage
+        {
+            get { return GetLanguagesFromAppSettings().First(); }
+        }
+
+        private static IEnumerable<string> GetLanguagesFromAppSettings()
+        {
+            var appSetting = ConfigurationManager.AppSettings["LocalizationLanguages"];
+            if (string.IsNullOrWhiteSpace(appSetting))
+            {
+                return new[]{ "en"};
+            }
+
+            return appSetting.Split(',');
+        }
 
         /// <summary>
         /// The key property for a localized field, represents the field's language code.
@@ -35,17 +54,20 @@ namespace OrangeJetpack.Localization
             Value = value;
         }
 
+        /// <summary>
+        /// Initializes a new serialized collection of LocalizedProperty items using default languages.
+        /// </summary>
         public static string Init()
         {
-            var defaults = new[]
-            {
-                new LocalizedProperty("en", ""),
-                new LocalizedProperty("ar", "")
-            };
+            var defaults = GetLanguagesFromAppSettings().Select(i => new LocalizedProperty(i, ""));
 
             return JsonConvert.SerializeObject(defaults);
         }
 
+        /// <summary>
+        /// Deserializes a serialized collection of LocalizedProperty items.
+        /// </summary>
+        /// <param name="serializedFields">A JSON serialized collection of LocalizedProperty items</param>
         public static LocalizedProperty[] Deserialize(string serializedFields)
         {
             return JsonConvert.DeserializeObject<LocalizedProperty[]>(serializedFields);
@@ -54,6 +76,9 @@ namespace OrangeJetpack.Localization
 
     public static class LocalizedPropertyExtenions
     {
+        /// <summary>
+        /// Serializes a single LocalizedProperty to a JSON string.
+        /// </summary>
         public static string Serialize(this LocalizedProperty property)
         {
             var properties = new[] { property };
@@ -61,6 +86,9 @@ namespace OrangeJetpack.Localization
             return JsonConvert.SerializeObject(properties);
         }
 
+        /// <summary>
+        /// Serializes a collection of LocalizerProperty items to a JSON string.
+        /// </summary>
         public static string Serialize(this LocalizedProperty[] properties)
         {
             return JsonConvert.SerializeObject(properties);

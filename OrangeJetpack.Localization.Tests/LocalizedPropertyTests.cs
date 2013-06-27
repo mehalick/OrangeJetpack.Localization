@@ -17,7 +17,7 @@ namespace OrangeJetpack.Localization.Tests
         }
 
         private const string ANY_STRING = "ABC123";
-        private const string NOT_DEFAULT_LANGUAGE = LocalizedProperty.DefaultLanguage + "zz";
+        private readonly string NOT_DEFAULT_LANGUAGE = LocalizedProperty.DefaultLanguage + "zz";
         private const string NOT_DEFAULT_ANY_STRING = ANY_STRING + "zz";
 
         [Test]
@@ -128,7 +128,7 @@ namespace OrangeJetpack.Localization.Tests
                 new TestClass {PropertyA = localizedFields.Serialize()}
             };
 
-            const string someOtherLanguage = NOT_DEFAULT_LANGUAGE + "yy";
+            var someOtherLanguage = NOT_DEFAULT_LANGUAGE + "yy";
             var localized = testClasses.Localize(someOtherLanguage, i => i.PropertyA);
 
             Assert.AreEqual(NOT_DEFAULT_ANY_STRING, localized.Single().PropertyA);
