@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using OrangeJetpack.Localization.Interfaces;
 
 namespace OrangeJetpack.Localization.Tests
 {
@@ -8,29 +7,29 @@ namespace OrangeJetpack.Localization.Tests
     // ReSharper disable PossibleNullReferenceException
 
     [TestFixture]
-    public class LocalizedPropertyTests
+    public class LocalizedContentTests
     {
-        public class TestClass : ILocalizedEntity
+        public class TestClass : ILocalizable
         {
             public string PropertyA { get; set; }
             public string PropertyB { get; set; }
         }
 
         private const string ANY_STRING = "ABC123";
-        private readonly string NOT_DEFAULT_LANGUAGE = LocalizedProperty.DefaultLanguage + "zz";
+        private readonly string NOT_DEFAULT_LANGUAGE = LocalizedContent.DefaultLanguage + "zz";
         private const string NOT_DEFAULT_ANY_STRING = ANY_STRING + "zz";
 
         [Test]
         public void Localize_SinglePropertyWithDefaultLanguage_LocalizesCorrectly()
         {
-            var localizedField = new LocalizedProperty(LocalizedProperty.DefaultLanguage, ANY_STRING);
+            var localizedField = new LocalizedContent(LocalizedContent.DefaultLanguage, ANY_STRING);
 
             var testClasses = new[]
             {
                 new TestClass {PropertyA = localizedField.Serialize()}
             };
 
-            var localized = testClasses.Localize(LocalizedProperty.DefaultLanguage, i => i.PropertyA);
+            var localized = testClasses.Localize(LocalizedContent.DefaultLanguage, i => i.PropertyA);
 
             Assert.AreEqual(ANY_STRING, localized.Single().PropertyA);
         }
@@ -40,8 +39,8 @@ namespace OrangeJetpack.Localization.Tests
         {
             var localizedFields = new[]
             {
-                new LocalizedProperty(LocalizedProperty.DefaultLanguage, ANY_STRING),
-                new LocalizedProperty(NOT_DEFAULT_LANGUAGE, NOT_DEFAULT_ANY_STRING)
+                new LocalizedContent(LocalizedContent.DefaultLanguage, ANY_STRING),
+                new LocalizedContent(NOT_DEFAULT_LANGUAGE, NOT_DEFAULT_ANY_STRING)
             };
 
             var testClasses = new[]
@@ -49,7 +48,7 @@ namespace OrangeJetpack.Localization.Tests
                 new TestClass {PropertyA = localizedFields.Serialize()}
             };
 
-            var localized = testClasses.Localize(LocalizedProperty.DefaultLanguage, i => i.PropertyA);
+            var localized = testClasses.Localize(LocalizedContent.DefaultLanguage, i => i.PropertyA);
 
             Assert.AreEqual(ANY_STRING, localized.Single().PropertyA);
         }
@@ -59,8 +58,8 @@ namespace OrangeJetpack.Localization.Tests
         {
             var localizedFields = new[]
             {
-                new LocalizedProperty(LocalizedProperty.DefaultLanguage, ANY_STRING),
-                new LocalizedProperty(NOT_DEFAULT_LANGUAGE, NOT_DEFAULT_ANY_STRING)
+                new LocalizedContent(LocalizedContent.DefaultLanguage, ANY_STRING),
+                new LocalizedContent(NOT_DEFAULT_LANGUAGE, NOT_DEFAULT_ANY_STRING)
             };
 
             var testClasses = new[]
@@ -78,8 +77,8 @@ namespace OrangeJetpack.Localization.Tests
         {
             var localizedFields = new[]
             {
-                new LocalizedProperty(LocalizedProperty.DefaultLanguage, ANY_STRING),
-                new LocalizedProperty(NOT_DEFAULT_LANGUAGE, NOT_DEFAULT_ANY_STRING)
+                new LocalizedContent(LocalizedContent.DefaultLanguage, ANY_STRING),
+                new LocalizedContent(NOT_DEFAULT_LANGUAGE, NOT_DEFAULT_ANY_STRING)
             };
 
             var testClasses = new[]
@@ -102,7 +101,7 @@ namespace OrangeJetpack.Localization.Tests
         {
             var localizedFields = new[]
             {
-                new LocalizedProperty(LocalizedProperty.DefaultLanguage, ANY_STRING)
+                new LocalizedContent(LocalizedContent.DefaultLanguage, ANY_STRING)
             };
 
             var testClasses = new[]
@@ -120,7 +119,7 @@ namespace OrangeJetpack.Localization.Tests
         {
             var localizedFields = new[]
             {
-                new LocalizedProperty(NOT_DEFAULT_LANGUAGE, NOT_DEFAULT_ANY_STRING)
+                new LocalizedContent(NOT_DEFAULT_LANGUAGE, NOT_DEFAULT_ANY_STRING)
             };
 
             var testClasses = new[]

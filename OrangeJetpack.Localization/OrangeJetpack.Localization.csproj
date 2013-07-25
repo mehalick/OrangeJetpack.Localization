@@ -41,9 +41,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\LocalizedPropertyAttribute.cs" />
-    <Compile Include="Interfaces\ILocalizedEntity.cs" />
-    <Compile Include="LocalizedProperty.cs" />
+    <Compile Include="LocalizedAttribute.cs" />
+    <Compile Include="ILocalizable.cs" />
+    <Compile Include="LocalizedContent.cs" />
+    <Compile Include="LocalizedContentExtenions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

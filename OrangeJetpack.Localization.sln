@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrangeJetpack.Localization", "OrangeJetpack.Localization\OrangeJetpack.Localization.csproj", "{B864C6AD-7559-43A3-BE34-E1A3FA0E5DBA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{994EA914-0370-4059-BB3A-9807803DCFE7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrangeJetpack.Localization.Tests", "OrangeJetpack.Localization.Tests\OrangeJetpack.Localization.Tests.csproj", "{3A1C03D2-BA7A-4BDA-AC47-925618D9AA74}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{941F2BA1-24DF-41ED-921A-23FB5B77A14C}"
@@ -31,8 +29,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{3A1C03D2-BA7A-4BDA-AC47-925618D9AA74} = {994EA914-0370-4059-BB3A-9807803DCFE7}
 	EndGlobalSection
 EndGlobal
