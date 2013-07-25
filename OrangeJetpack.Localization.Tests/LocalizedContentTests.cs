@@ -132,6 +132,21 @@ namespace OrangeJetpack.Localization.Tests
 
             Assert.AreEqual(NOT_DEFAULT_ANY_STRING, localized.Single().PropertyA);
         }
+
+        [Test]
+        public void Localize_NonserializedProperty_ReturnsOriginalValueWithoutThrowingException()
+        {
+            const string notSerializedJson = ANY_STRING;
+
+            var testClasses = new[]
+            {
+                new TestClass {PropertyA = notSerializedJson}
+            };
+
+            var localized = testClasses.Localize(LocalizedContent.DefaultLanguage, i => i.PropertyA);
+
+            Assert.AreEqual(notSerializedJson, localized.Single().PropertyA);
+        }
     }
 
     // ReSharper restore InconsistentNaming

@@ -73,30 +73,35 @@ namespace OrangeJetpack.Localization
                     continue;
                 }
 
-                var localizedFields = LocalizedContent.Deserialize(propertyValue);
-                var fieldForLanguage = GetPropertyForLanguage(localizedFields, language);
+                LocalizedContent[] localizedContents;
+                if (!LocalizedContent.TryDeserialize(propertyValue, out localizedContents))
+                {
+                    continue;
+                } 
+                    
+                var contentForLanguage = GetContentForLanguage(localizedContents, language);
 
                 var propertyInfo = (PropertyInfo)memberExpression.Member;
-                propertyInfo.SetValue(item, fieldForLanguage.Value, null);
+                propertyInfo.SetValue(item, contentForLanguage.Value, null);
             }
         }
 
-        private static LocalizedContent GetPropertyForLanguage(LocalizedContent[] localizedContents, string language)
+        private static LocalizedContent GetContentForLanguage(LocalizedContent[] localizedContents, string language)
         {
             if (!localizedContents.Any())
             {
                 throw new ArgumentException("Cannot localize property, no localized property values exist.", "localizedContents");
             }
 
-            var localizedProperty = localizedContents.SingleOrDefault(i => i.Key.Equals(language));
-            if (localizedProperty == null && language != LocalizedContent.DefaultLanguage)
+            var localizedContent = localizedContents.SingleOrDefault(i => i.Key.Equals(language));
+            if (localizedContent == null && language != LocalizedContent.DefaultLanguage)
             {
-                localizedProperty = GetPropertyForDefaultLanguageOrFirst(localizedContents);
+                localizedContent = GetContentForDefaultLanguageOrFirst(localizedContents);
             }
-            return localizedProperty;
+            return localizedContent;
         }
 
-        private static LocalizedContent GetPropertyForDefaultLanguageOrFirst(LocalizedContent[] localizedContents)
+        private static LocalizedContent GetContentForDefaultLanguageOrFirst(LocalizedContent[] localizedContents)
         {
             return localizedContents.SingleOrDefault(i => i.Key.Equals(LocalizedContent.DefaultLanguage)) ??
                    localizedContents.First();

@@ -77,5 +77,24 @@ namespace OrangeJetpack.Localization
         {
             return JsonConvert.DeserializeObject<LocalizedContent[]>(serializedContents);
         }
+
+        /// <summary>
+        /// Deserializes a serialized collection of LocalizedContent items, returns a new collection with default language if JSON reader exception occurs.
+        /// </summary>
+        /// <param name="serializedContents">A JSON serialized collection of LocalizedContent items.</param>
+        /// <param name="localizedContent">The output deserialized collection of LocalizedContentItems.</param>
+        public static bool TryDeserialize(string serializedContents, out LocalizedContent[] localizedContent)
+        {
+            try
+            {
+                localizedContent = Deserialize(serializedContents);
+                return true;
+            }
+            catch (JsonReaderException)
+            {
+                localizedContent = new[] { new LocalizedContent(DefaultLanguage, serializedContents) };
+                return false;
+            }
+        }
     }
 }
