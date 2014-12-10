@@ -93,7 +93,7 @@ namespace OrangeJetpack.Localization
                 throw new ArgumentException("Cannot localize property, no localized property values exist.", "localizedContents");
             }
 
-            var localizedContent = localizedContents.SingleOrDefault(i => i.Key.Equals(language));
+            var localizedContent = localizedContents.SingleOrDefault(i => i.Key.Equals(language) && !string.IsNullOrWhiteSpace(i.Value));
             if (localizedContent == null && language != LocalizedContent.DefaultLanguage)
             {
                 localizedContent = GetContentForDefaultLanguageOrFirst(localizedContents);
