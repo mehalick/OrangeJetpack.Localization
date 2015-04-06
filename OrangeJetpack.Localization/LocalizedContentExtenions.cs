@@ -94,18 +94,14 @@ namespace OrangeJetpack.Localization
             }
 
             var localizedContent = localizedContents.SingleOrDefault(i => i.Key.Equals(language) && !string.IsNullOrWhiteSpace(i.Value));
-            if (localizedContent == null && language != LocalizedContent.DefaultLanguage)
-            {
-                localizedContent = GetContentForDefaultLanguageOrFirst(localizedContents);
-            }
-            return localizedContent;
+
+            return localizedContent ?? GetContentForDefaultLanguageOrFirst(localizedContents);
         }
 
         private static LocalizedContent GetContentForDefaultLanguageOrFirst(LocalizedContent[] localizedContents)
         {
             return localizedContents.SingleOrDefault(i => i.Key.Equals(LocalizedContent.DefaultLanguage)) ??
                    localizedContents.First();
-
         }
     }
 }
