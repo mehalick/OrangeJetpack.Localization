@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace OrangeJetpack.Localization
 {
-    public static class LocalizedContentExtenions
+    public static class LocalizedContentExtensions
     {
         /// <summary>
         /// Serializes a single LocalizedContent item to a JSON string.

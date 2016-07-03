@@ -11,10 +11,7 @@ namespace OrangeJetpack.Localization
         /// The default language to use when a language is needed.
         /// </summary>
         /// <returns>The first language in AppSettings["LocalizationLanguages"] or "en" if no settings.</returns>
-        public static string DefaultLanguage
-        {
-            get { return GetLanguagesFromAppSettings().First(); }
-        }
+        public static string DefaultLanguage => GetLanguagesFromAppSettings().First();
 
         private static IEnumerable<string> GetLanguagesFromAppSettings()
         {
