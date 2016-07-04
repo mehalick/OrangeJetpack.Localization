@@ -45,6 +45,18 @@ namespace OrangeJetpack.Localization
             return item;
         }
 
+        public static T Localize<T>(this T item, string language) where T : class, ILocalizable
+        {
+            if (item == null)
+            {
+                return null;
+            }
+
+            LocalizeProperties(item, language);
+
+            return item;
+        }
+
         /// <summary>
         /// Returns a collection with one or more localized properties deserialized and set to specified language. 
         /// </summary>
@@ -59,6 +71,36 @@ namespace OrangeJetpack.Localization
                 LocalizeProperties(item, language, properties);
 
                 yield return item;
+            }
+        }
+
+        private static void LocalizeProperties<T>(T item, string language)
+        {
+            var properties = item
+                .GetType()
+                .GetProperties()
+                .Where(prop => Attribute.IsDefined(prop, typeof(LocalizedAttribute)));
+
+            foreach (var propertyInfo in properties)
+            {
+                var propertyValue = propertyInfo.GetValue(item).ToString();
+                if (string.IsNullOrEmpty(propertyValue))
+                {
+                    continue;
+                }
+
+                LocalizedContent[] localizedContents;
+                if (!LocalizedContent.TryDeserialize(propertyValue, out localizedContents))
+                {
+                    continue;
+                }
+
+                var contentForLanguage = GetContentForLanguage(localizedContents, language);
+
+                //var localizedFields = LocalizedProperty.Deserialize(propertyValue.ToString());
+                //var fieldForLanguage = GetPropertyForLanguage(localizedFields, language);
+
+                propertyInfo.SetValue(item, contentForLanguage.Value, null);
             }
         }
 
