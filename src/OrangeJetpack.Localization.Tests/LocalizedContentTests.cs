@@ -172,7 +172,7 @@ namespace OrangeJetpack.Localization.Tests
         [Test]
         public void Localize_NonserializedProperty_ReturnsOriginalValueWithoutThrowingException()
         {
-            const string notSerializedJson = ANY_STRING_1;
+            const string notSerializedJson = "1";
 
             var testClasses = new[]
             {
