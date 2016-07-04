@@ -87,7 +87,7 @@ namespace OrangeJetpack.Localization
                 localizedContent = Deserialize(serializedContents);
                 return true;
             }
-            catch (JsonReaderException)
+            catch (JsonSerializationException)
             {
                 localizedContent = new[] { new LocalizedContent(DefaultLanguage, serializedContents) };
                 return false;

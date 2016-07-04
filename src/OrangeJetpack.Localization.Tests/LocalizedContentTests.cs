@@ -11,27 +11,63 @@ namespace OrangeJetpack.Localization.Tests
     {
         public class TestClass : ILocalizable
         {
+            [Localized]
             public string PropertyA { get; set; }
+
+            [Localized]
             public string PropertyB { get; set; }
         }
 
-        private const string ANY_STRING = "ABC123";
-        private readonly string NOT_DEFAULT_LANGUAGE = LocalizedContent.DefaultLanguage + "zz";
-        private const string NOT_DEFAULT_ANY_STRING = ANY_STRING + "zz";
+        private const string DEFAULT_LANGUAGE = "en";
+        private const string OTHER_LANGUAGE = "zz";
+        private const string ANY_STRING_1 = "ABC123";
+        private const string ANY_STRING_2 = "XYZ789";
+
+        [Test]
+        public void Localize_NoPropertiesSpecified_LocalizesAllProperties()
+        {
+            var localizedFields = new[]
+            {
+                new LocalizedContent(DEFAULT_LANGUAGE, ANY_STRING_1),
+                new LocalizedContent(OTHER_LANGUAGE, ANY_STRING_2)
+            };
+
+            var testClass1 = new TestClass
+            {
+                PropertyA = localizedFields.Serialize(),
+                PropertyB = localizedFields.Serialize()
+            };
+
+            var testClass2 = new TestClass
+            {
+                PropertyA = localizedFields.Serialize(),
+                PropertyB = localizedFields.Serialize()
+            };
+
+            testClass1.Localize(DEFAULT_LANGUAGE);
+
+            Assert.AreEqual(ANY_STRING_1, testClass1.PropertyA);
+            Assert.AreEqual(ANY_STRING_1, testClass1.PropertyB);
+
+            testClass2.Localize(OTHER_LANGUAGE);
+
+            Assert.AreEqual(ANY_STRING_2, testClass2.PropertyA);
+            Assert.AreEqual(ANY_STRING_2, testClass2.PropertyB);
+        }
 
         [Test]
         public void Localize_SinglePropertyWithDefaultLanguage_LocalizesCorrectly()
         {
-            var localizedField = new LocalizedContent(LocalizedContent.DefaultLanguage, ANY_STRING);
+            var localizedField = new LocalizedContent(DEFAULT_LANGUAGE, ANY_STRING_1);
 
             var testClasses = new[]
             {
                 new TestClass {PropertyA = localizedField.Serialize()}
             };
 
-            var localized = testClasses.Localize(LocalizedContent.DefaultLanguage, i => i.PropertyA);
+            var localized = testClasses.Localize(DEFAULT_LANGUAGE, i => i.PropertyA);
 
-            Assert.AreEqual(ANY_STRING, localized.Single().PropertyA);
+            Assert.AreEqual(ANY_STRING_1, localized.Single().PropertyA);
         }
 
         [Test]
@@ -39,8 +75,8 @@ namespace OrangeJetpack.Localization.Tests
         {
             var localizedFields = new[]
             {
-                new LocalizedContent(LocalizedContent.DefaultLanguage, ANY_STRING),
-                new LocalizedContent(NOT_DEFAULT_LANGUAGE, NOT_DEFAULT_ANY_STRING)
+                new LocalizedContent(DEFAULT_LANGUAGE, ANY_STRING_1),
+                new LocalizedContent(OTHER_LANGUAGE, ANY_STRING_2)
             };
 
             var testClasses = new[]
@@ -48,9 +84,9 @@ namespace OrangeJetpack.Localization.Tests
                 new TestClass {PropertyA = localizedFields.Serialize()}
             };
 
-            var localized = testClasses.Localize(LocalizedContent.DefaultLanguage, i => i.PropertyA);
+            var localized = testClasses.Localize(DEFAULT_LANGUAGE, i => i.PropertyA);
 
-            Assert.AreEqual(ANY_STRING, localized.Single().PropertyA);
+            Assert.AreEqual(ANY_STRING_1, localized.Single().PropertyA);
         }
 
         [Test]
@@ -58,8 +94,8 @@ namespace OrangeJetpack.Localization.Tests
         {
             var localizedFields = new[]
             {
-                new LocalizedContent(LocalizedContent.DefaultLanguage, ANY_STRING),
-                new LocalizedContent(NOT_DEFAULT_LANGUAGE, NOT_DEFAULT_ANY_STRING)
+                new LocalizedContent(DEFAULT_LANGUAGE, ANY_STRING_1),
+                new LocalizedContent(OTHER_LANGUAGE, ANY_STRING_2)
             };
 
             var testClasses = new[]
@@ -67,9 +103,9 @@ namespace OrangeJetpack.Localization.Tests
                 new TestClass {PropertyA = localizedFields.Serialize()}
             };
 
-            var localized = testClasses.Localize(NOT_DEFAULT_LANGUAGE, i => i.PropertyA);
+            var localized = testClasses.Localize(OTHER_LANGUAGE, i => i.PropertyA);
 
-            Assert.AreEqual(NOT_DEFAULT_ANY_STRING, localized.Single().PropertyA);
+            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyA);
         }
 
         [Test]
@@ -77,8 +113,8 @@ namespace OrangeJetpack.Localization.Tests
         {
             var localizedFields = new[]
             {
-                new LocalizedContent(LocalizedContent.DefaultLanguage, ANY_STRING),
-                new LocalizedContent(NOT_DEFAULT_LANGUAGE, NOT_DEFAULT_ANY_STRING)
+                new LocalizedContent(DEFAULT_LANGUAGE, ANY_STRING_1),
+                new LocalizedContent(OTHER_LANGUAGE, ANY_STRING_2)
             };
 
             var testClasses = new[]
@@ -90,10 +126,10 @@ namespace OrangeJetpack.Localization.Tests
                 }
             };
 
-            var localized = testClasses.Localize(NOT_DEFAULT_LANGUAGE, i => i.PropertyA, i => i.PropertyB).ToList();
+            var localized = testClasses.Localize(OTHER_LANGUAGE, i => i.PropertyA, i => i.PropertyB).ToList();
 
-            Assert.AreEqual(NOT_DEFAULT_ANY_STRING, localized.Single().PropertyA);
-            Assert.AreEqual(NOT_DEFAULT_ANY_STRING, localized.Single().PropertyB);
+            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyA);
+            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyB);
         }
 
         [Test]
@@ -101,7 +137,7 @@ namespace OrangeJetpack.Localization.Tests
         {
             var localizedFields = new[]
             {
-                new LocalizedContent(LocalizedContent.DefaultLanguage, ANY_STRING)
+                new LocalizedContent(DEFAULT_LANGUAGE, ANY_STRING_1)
             };
 
             var testClasses = new[]
@@ -109,9 +145,9 @@ namespace OrangeJetpack.Localization.Tests
                 new TestClass {PropertyA = localizedFields.Serialize()}
             };
 
-            var localized = testClasses.Localize(NOT_DEFAULT_LANGUAGE, i => i.PropertyA);
+            var localized = testClasses.Localize(OTHER_LANGUAGE, i => i.PropertyA);
 
-            Assert.AreEqual(ANY_STRING, localized.Single().PropertyA);
+            Assert.AreEqual(ANY_STRING_1, localized.Single().PropertyA);
         }
 
         [Test]
@@ -119,7 +155,7 @@ namespace OrangeJetpack.Localization.Tests
         {
             var localizedFields = new[]
             {
-                new LocalizedContent(NOT_DEFAULT_LANGUAGE, NOT_DEFAULT_ANY_STRING)
+                new LocalizedContent(OTHER_LANGUAGE, ANY_STRING_2)
             };
 
             var testClasses = new[]
@@ -127,23 +163,23 @@ namespace OrangeJetpack.Localization.Tests
                 new TestClass {PropertyA = localizedFields.Serialize()}
             };
 
-            var someOtherLanguage = NOT_DEFAULT_LANGUAGE + "yy";
+            var someOtherLanguage = OTHER_LANGUAGE + "yy";
             var localized = testClasses.Localize(someOtherLanguage, i => i.PropertyA);
 
-            Assert.AreEqual(NOT_DEFAULT_ANY_STRING, localized.Single().PropertyA);
+            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyA);
         }
 
         [Test]
         public void Localize_NonserializedProperty_ReturnsOriginalValueWithoutThrowingException()
         {
-            const string notSerializedJson = ANY_STRING;
+            const string notSerializedJson = "1";
 
             var testClasses = new[]
             {
                 new TestClass {PropertyA = notSerializedJson}
             };
 
-            var localized = testClasses.Localize(LocalizedContent.DefaultLanguage, i => i.PropertyA);
+            var localized = testClasses.Localize(DEFAULT_LANGUAGE, i => i.PropertyA);
 
             Assert.AreEqual(notSerializedJson, localized.Single().PropertyA);
         }
