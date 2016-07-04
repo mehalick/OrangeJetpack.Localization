@@ -31,20 +31,7 @@ namespace OrangeJetpack.Localization
         /// </summary>
         /// <param name="item">The items to localize.</param>
         /// <param name="language">The language to use for localization.</param>
-        /// <param name="properties">The collection of localized properties to process.</param>
         /// <remarks>If the specified language is not found the default language or first in list is used.</remarks>
-        public static T Localize<T>(this T item, string language, params Expression<Func<T, string>>[] properties) where T : class, ILocalizable
-        {
-            if (item == null)
-            {
-                return null;
-            }
-
-            LocalizeProperties(item, language, properties);
-
-            return item;
-        }
-
         public static T Localize<T>(this T item, string language) where T : class, ILocalizable
         {
             if (item == null)
@@ -62,13 +49,12 @@ namespace OrangeJetpack.Localization
         /// </summary>
         /// <param name="items">The collection of items to localize.</param>
         /// <param name="language">The language to use for localization.</param>
-        /// <param name="properties">The collection of localized properties to process.</param>
         /// <remarks>If the specified language is not found the default language or first in list is used.</remarks>
-        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, string language, params Expression<Func<T, string>>[] properties) where T : class, ILocalizable
+        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, string language) where T : class, ILocalizable
         {
             foreach (var item in items)
             {
-                LocalizeProperties(item, language, properties);
+                LocalizeProperties(item, language);
 
                 yield return item;
             }
@@ -96,11 +82,43 @@ namespace OrangeJetpack.Localization
                 }
 
                 var contentForLanguage = GetContentForLanguage(localizedContents, language);
-
-                //var localizedFields = LocalizedProperty.Deserialize(propertyValue.ToString());
-                //var fieldForLanguage = GetPropertyForLanguage(localizedFields, language);
-
                 propertyInfo.SetValue(item, contentForLanguage.Value, null);
+            }
+        }
+
+        /// <summary>
+        /// Returns an item with one or more localized properties deserialized and set to specified language. 
+        /// </summary>
+        /// <param name="item">The items to localize.</param>
+        /// <param name="language">The language to use for localization.</param>
+        /// <param name="properties">The collection of localized properties to process.</param>
+        /// <remarks>If the specified language is not found the default language or first in list is used.</remarks>
+        public static T Localize<T>(this T item, string language, params Expression<Func<T, string>>[] properties) where T : class, ILocalizable
+        {
+            if (item == null)
+            {
+                return null;
+            }
+
+            LocalizeProperties(item, language, properties);
+
+            return item;
+        }
+
+        /// <summary>
+        /// Returns a collection with one or more localized properties deserialized and set to specified language. 
+        /// </summary>
+        /// <param name="items">The collection of items to localize.</param>
+        /// <param name="language">The language to use for localization.</param>
+        /// <param name="properties">The collection of localized properties to process.</param>
+        /// <remarks>If the specified language is not found the default language or first in list is used.</remarks>
+        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, string language, params Expression<Func<T, string>>[] properties) where T : class, ILocalizable
+        {
+            foreach (var item in items)
+            {
+                LocalizeProperties(item, language, properties);
+
+                yield return item;
             }
         }
 
