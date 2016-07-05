@@ -16,6 +16,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\OrangeJetpack.Localization.dll" target="lib\net45" />
+    <file src="bin\Release\OrangeJetpack.Localization.dll" target="lib\net45" />
   </files>
 </package>
