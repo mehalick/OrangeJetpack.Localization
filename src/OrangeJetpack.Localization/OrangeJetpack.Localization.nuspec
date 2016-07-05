@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>OrangeJetpack.Localization</id>
+    <version>$version$</version>
+    <title>Orange Jetpack Localization</title>
+    <authors>Andy Mehalick</authors>
+    <owners>Orange Jetpack Studios</owners>
+    <projectUrl>https://github.com/mehalick/OrangeJetpack.Localization</projectUrl>
+    <iconUrl>https://ojs.azureedge.net/assets/orange-jetpack-logo-white-128x128-635776631313452039.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Adds support to enable entities to have localized properties stored as JSON.</description>
+    <tags>Localization JSON</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="8.0.3" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\OrangeJetpack.Localization.dll" target="lib\net45" />
+  </files>
+</package>
