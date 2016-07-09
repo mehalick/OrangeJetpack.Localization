@@ -31,8 +31,9 @@ namespace OrangeJetpack.Localization
         /// </summary>
         /// <param name="item">The items to localize.</param>
         /// <param name="language">The language to use for localization.</param>
+        /// <param name="depth">The depth to which child properties should be localized.</param>
         /// <remarks>If the specified language is not found the default language or first in list is used.</remarks>
-        public static T Localize<T>(this T item, string language) where T : class, ILocalizable
+        public static T Localize<T>(this T item, string language, LocalizationDepth depth = LocalizationDepth.Deep) where T : class, ILocalizable
         {
             if (item == null)
             {
@@ -41,7 +42,32 @@ namespace OrangeJetpack.Localization
 
             LocalizeProperties(item, language);
 
+            LocalizeChildren(item, language, depth);
+
             return item;
+        }
+
+        private static void LocalizeChildren<T>(T item, string language, LocalizationDepth depth) where T : class, ILocalizable
+        {
+            if (depth == LocalizationDepth.Shallow)
+            {
+                return;
+            }
+
+            if (depth == LocalizationDepth.OneLevel)
+            {
+                depth = LocalizationDepth.Shallow;
+            }
+
+            var children = item.GetType()
+                .GetProperties()
+                .Select(i => i.GetValue(item, null) as ILocalizable)
+                .Where(i => i != null);
+
+            foreach (var child in children)
+            {
+                child.Localize(language, depth);
+            }
         }
 
         /// <summary>
@@ -65,11 +91,11 @@ namespace OrangeJetpack.Localization
             var properties = item
                 .GetType()
                 .GetProperties()
-                .Where(prop => Attribute.IsDefined(prop, typeof(LocalizedAttribute)));
+                .Where(i => Attribute.IsDefined(i, typeof(LocalizedAttribute)));
 
             foreach (var propertyInfo in properties)
             {
-                var propertyValue = propertyInfo.GetValue(item).ToString();
+                var propertyValue = propertyInfo.GetValue(item)?.ToString();
                 if (string.IsNullOrEmpty(propertyValue))
                 {
                     continue;
