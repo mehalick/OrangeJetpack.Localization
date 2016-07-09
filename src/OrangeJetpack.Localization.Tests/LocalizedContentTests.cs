@@ -216,7 +216,7 @@ namespace OrangeJetpack.Localization.Tests
                 }
             };
 
-            var localized = testClass.Localize(DEFAULT_LANGUAGE);
+            var localized = testClass.Localize(DEFAULT_LANGUAGE, LocalizationDepth.Deep);
 
             Assert.AreEqual(ANY_STRING_1, localized.ChildA.PropertyA);
             Assert.AreEqual(ANY_STRING_1, localized.ChildA.ChildA.PropertyA);
@@ -292,7 +292,7 @@ namespace OrangeJetpack.Localization.Tests
                 }
             };
 
-            var localized = testClass.Localize(DEFAULT_LANGUAGE);
+            var localized = testClass.Localize(DEFAULT_LANGUAGE, LocalizationDepth.Deep);
 
             Assert.AreEqual(ANY_STRING_1, localized.ChildrenA.ElementAt(0).PropertyA);
             Assert.AreEqual(ANY_STRING_1, localized.ChildrenA.ElementAt(1).PropertyA);
