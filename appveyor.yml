@@ -1,4 +1,4 @@
-version: 1.6.{build}
+version: 1.7.{build}
 branches:
   only:
   - master
@@ -16,11 +16,10 @@ build:
 artifacts:
 - path: OrangeJetpack.Localization\bin\Release\OrangeJetpack.Localization.dll
   name: OrangeJetpack.Localization.dll
-- path: /.*\.nupkg/
+- path: '**\*.nupkg'
 deploy:
 - provider: NuGet
   api_key:
-    secure: YCbMu8l9i4QgxqXQ6SfnRp0EGd6pJNVuqDhJ7eUCqtEV+oBnyRKfS6VajNwheZs6
+    secure: FzrDwPQx7c8FvZ1edcp+yE4lJx75Q3MfCXlobdBjtA2XP60134X6W0BuN43fF8H/HuK7K6OHfTICzcCcbcAyHv1ZjQ8wDuhDngaHy2d749w=
   on:
     branch: master
-  artifact: /.*\.nupkg/

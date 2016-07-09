@@ -57,7 +57,6 @@ public ActionResult Edit(Planet planet, LocalizedContent[] name)
 }
 ```
 
-
 ### Localizing an Object
 
 You can use Localize<T>() extension methods to get a localized instance of an ILocalizable class or collection.
