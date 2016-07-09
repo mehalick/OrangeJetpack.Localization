@@ -83,12 +83,12 @@ var planets = _db.Planets.Localize("en", i => i.Name);
 #### Controlling Depth of Localization
 
 ```
-// localizes only root objects
+// localizes only root objects (DEFAULT)
 var planets = _db.Planets.Localize("en", LocalizationDepth.Shallow);
 
 // localizes only root objects and immediate children (properties and collections)
 var planets = _db.Planets.Localize("en", LocalizationDepth.OneLevel);
 
-// localizes only root objects and all children recursively (DEFAULT)
+// localizes only root objects and all children recursively
 var planets = _db.Planets.Localize("en", LocalizationDepth.Deep);
 ```

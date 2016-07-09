@@ -35,7 +35,7 @@ namespace OrangeJetpack.Localization
         /// <param name="language">The language to use for localization.</param>
         /// <param name="depth">The depth to which child properties should be localized.</param>
         /// <remarks>If the specified language is not found the default language or first in list is used.</remarks>
-        public static T Localize<T>(this T item, string language, LocalizationDepth depth = LocalizationDepth.Deep) where T : class, ILocalizable
+        public static T Localize<T>(this T item, string language, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
             if (item == null)
             {
@@ -105,7 +105,7 @@ namespace OrangeJetpack.Localization
         /// <param name="language">The language to use for localization.</param>
         /// <param name="depth">The depth to which child properties should be localized.</param>
         /// <remarks>If the specified language is not found the default language or first in list is used.</remarks>
-        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, string language, LocalizationDepth depth) where T : class, ILocalizable
+        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, string language, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
             foreach (var item in items)
             {
