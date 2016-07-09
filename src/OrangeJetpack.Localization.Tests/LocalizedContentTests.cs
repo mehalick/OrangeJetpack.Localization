@@ -25,7 +25,7 @@ namespace OrangeJetpack.Localization.Tests
 
             public ICollection<TestClassA> ChildrenA { get; set; }
             public ICollection<TestClassB> ChildrenB { get; set; }
-            public ICollection<object> NonLocalizedCollection { get; set; } = new object[] {"I'M", "NOT", "LOCALIZED"};
+            public ICollection<object> NonLocalizedCollection { get; set; } = new object[] { "I'M", "NOT", "LOCALIZED" };
         }
 
         public class TestClassB : ILocalizable
@@ -46,12 +46,12 @@ namespace OrangeJetpack.Localization.Tests
 
         private static string GetLocalizedContent()
         {
-            var localizedFields = new[]
+            var localizedContent = new[]
             {
                 new LocalizedContent(DEFAULT_LANGUAGE, ANY_STRING_1),
                 new LocalizedContent(OTHER_LANGUAGE, ANY_STRING_2)
             };
-            return localizedFields.Serialize();
+            return localizedContent.Serialize();
         }
 
         [Test]
@@ -297,6 +297,42 @@ namespace OrangeJetpack.Localization.Tests
             Assert.AreEqual(ANY_STRING_1, localized.ChildrenA.ElementAt(0).PropertyA);
             Assert.AreEqual(ANY_STRING_1, localized.ChildrenA.ElementAt(1).PropertyA);
             Assert.AreEqual(ANY_STRING_1, localized.ChildrenB.ElementAt(0).PropertyA);
+        }
+
+        [Test]
+        public void Set_ProvideLocalizedContentArray_SetsProperty()
+        {
+            var testClass = new TestClassA();
+
+            var localizedContent = new[]
+            {
+                new LocalizedContent(DEFAULT_LANGUAGE, ANY_STRING_1),
+                new LocalizedContent(OTHER_LANGUAGE, ANY_STRING_2)
+            };
+
+            testClass.Set(i => i.PropertyA, localizedContent);
+
+            var localized = testClass.Localize(DEFAULT_LANGUAGE);
+
+            Assert.AreEqual(ANY_STRING_1, localized.PropertyA);
+        }
+
+        [Test]
+        public void Set_ProvideLocalizedContentDictionary_SetsProperty()
+        {
+            var testClass = new TestClassA();
+
+            var localizedContent = new Dictionary<string, string>
+            {
+                {DEFAULT_LANGUAGE, ANY_STRING_1},
+                {OTHER_LANGUAGE, ANY_STRING_2}
+            };
+
+            testClass.Set(i => i.PropertyA, localizedContent);
+
+            var localized = testClass.Localize(DEFAULT_LANGUAGE);
+
+            Assert.AreEqual(ANY_STRING_1, localized.PropertyA);
         }
     }
 

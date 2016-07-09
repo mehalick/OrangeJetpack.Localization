@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -22,7 +23,7 @@ namespace OrangeJetpack.Localization
         /// <summary>
         /// Serializes a collection of LocalizedContent items to a JSON string.
         /// </summary>
-        public static string Serialize(this LocalizedContent[] contents)
+        public static string Serialize(this IEnumerable<LocalizedContent> contents)
         {
             return LocalizedContent.Serialize(contents);
         }
@@ -193,8 +194,8 @@ namespace OrangeJetpack.Localization
                 if (!LocalizedContent.TryDeserialize(propertyValue, out localizedContents))
                 {
                     continue;
-                } 
-                    
+                }
+
                 var contentForLanguage = GetContentForLanguage(localizedContents, language);
 
                 var propertyInfo = (PropertyInfo)memberExpression.Member;
@@ -206,7 +207,7 @@ namespace OrangeJetpack.Localization
         {
             if (!localizedContents.Any())
             {
-                throw new ArgumentException("Cannot localize property, no localized property values exist.", "localizedContents");
+                throw new ArgumentException("Cannot localize property, no localized property values exist.", nameof(localizedContents));
             }
 
             var localizedContent = localizedContents.SingleOrDefault(i => i.Key.Equals(language) && !string.IsNullOrWhiteSpace(i.Value));
@@ -218,6 +219,40 @@ namespace OrangeJetpack.Localization
         {
             return localizedContents.SingleOrDefault(i => i.Key.Equals(LocalizedContent.DefaultLanguage)) ??
                    localizedContents.First();
+        }
+
+        /// <summary>
+        /// Sets an item's localized content property from a <see cref="LocalizedContent"/> collection.
+        /// </summary>
+        /// <param name="item">An ILocalizable item.</param>
+        /// <param name="property">The property to set.</param>
+        /// <param name="content">The collection of localized content.</param>
+        /// <returns>The original item with localized property sety.</returns>
+        public static T Set<T>(this T item, Expression<Func<T, string>> property, IEnumerable<LocalizedContent> content) where T : class, ILocalizable
+        {
+            var memberExpression = (MemberExpression)property.Body;
+            var propertyInfo = (PropertyInfo)memberExpression.Member;
+            propertyInfo.SetValue(item, content.Serialize(), null);
+
+            return item;
+        }
+
+        /// <summary>
+        /// Sets an item's localized content property from a dictionary.
+        /// </summary>
+        /// <param name="item">An ILocalizable item.</param>
+        /// <param name="property">The property to set.</param>
+        /// <param name="content">The dictionary of localized content.</param>
+        /// <returns>The original item with localized property sety.</returns>
+        public static T Set<T>(this T item, Expression<Func<T, string>> property, IDictionary<string, string> content) where T : class, ILocalizable
+        {
+            var localizedContents = content.Select(i => new LocalizedContent
+            {
+                Key = i.Key,
+                Value = i.Value
+            });
+
+            return Set(item, property, localizedContents);
         }
     }
 }
