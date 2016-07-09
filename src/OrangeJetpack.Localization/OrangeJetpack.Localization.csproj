@@ -42,6 +42,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LocalizationDepth.cs" />
     <Compile Include="LocalizedAttribute.cs" />
     <Compile Include="ILocalizable.cs" />
     <Compile Include="LocalizedContent.cs" />

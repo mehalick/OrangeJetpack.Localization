@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -21,7 +23,7 @@ namespace OrangeJetpack.Localization
         /// <summary>
         /// Serializes a collection of LocalizedContent items to a JSON string.
         /// </summary>
-        public static string Serialize(this LocalizedContent[] contents)
+        public static string Serialize(this IEnumerable<LocalizedContent> contents)
         {
             return LocalizedContent.Serialize(contents);
         }
@@ -31,8 +33,9 @@ namespace OrangeJetpack.Localization
         /// </summary>
         /// <param name="item">The items to localize.</param>
         /// <param name="language">The language to use for localization.</param>
+        /// <param name="depth">The depth to which child properties should be localized.</param>
         /// <remarks>If the specified language is not found the default language or first in list is used.</remarks>
-        public static T Localize<T>(this T item, string language) where T : class, ILocalizable
+        public static T Localize<T>(this T item, string language, LocalizationDepth depth = LocalizationDepth.Deep) where T : class, ILocalizable
         {
             if (item == null)
             {
@@ -40,8 +43,59 @@ namespace OrangeJetpack.Localization
             }
 
             LocalizeProperties(item, language);
+            LocalizeChildren(item, language, depth);
+            LocalizeCollections(item, language, depth);
 
             return item;
+        }
+
+        private static void LocalizeChildren<T>(T item, string language, LocalizationDepth depth) where T : class, ILocalizable
+        {
+            if (depth == LocalizationDepth.Shallow)
+            {
+                return;
+            }
+
+            if (depth == LocalizationDepth.OneLevel)
+            {
+                depth = LocalizationDepth.Shallow;
+            }
+
+            var children = item.GetType()
+                .GetProperties()
+                .Select(i => i.GetValue(item, null) as ILocalizable)
+                .Where(i => i != null);
+
+            foreach (var child in children)
+            {
+                child.Localize(language, depth);
+            }
+        }
+
+        private static void LocalizeCollections<T>(T item, string language, LocalizationDepth depth) where T : class, ILocalizable
+        {
+            if (depth == LocalizationDepth.Shallow)
+            {
+                return;
+            }
+
+            if (depth == LocalizationDepth.OneLevel)
+            {
+                depth = LocalizationDepth.Shallow;
+            }
+
+            var collections = item.GetType()
+                .GetProperties()
+                .Select(i => i.GetValue(item) as IEnumerable)
+                .Where(i => i != null);
+
+            foreach (var collection in collections)
+            {
+                foreach (var element in collection)
+                {
+                    Localize(element as ILocalizable, language, depth);
+                }
+            }
         }
 
         /// <summary>
@@ -49,12 +103,15 @@ namespace OrangeJetpack.Localization
         /// </summary>
         /// <param name="items">The collection of items to localize.</param>
         /// <param name="language">The language to use for localization.</param>
+        /// <param name="depth">The depth to which child properties should be localized.</param>
         /// <remarks>If the specified language is not found the default language or first in list is used.</remarks>
-        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, string language) where T : class, ILocalizable
+        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, string language, LocalizationDepth depth) where T : class, ILocalizable
         {
             foreach (var item in items)
             {
                 LocalizeProperties(item, language);
+                LocalizeChildren(item, language, depth);
+                LocalizeCollections(item, language, depth);
 
                 yield return item;
             }
@@ -65,11 +122,11 @@ namespace OrangeJetpack.Localization
             var properties = item
                 .GetType()
                 .GetProperties()
-                .Where(prop => Attribute.IsDefined(prop, typeof(LocalizedAttribute)));
+                .Where(i => Attribute.IsDefined(i, typeof(LocalizedAttribute)));
 
             foreach (var propertyInfo in properties)
             {
-                var propertyValue = propertyInfo.GetValue(item).ToString();
+                var propertyValue = propertyInfo.GetValue(item)?.ToString();
                 if (string.IsNullOrEmpty(propertyValue))
                 {
                     continue;
@@ -137,8 +194,8 @@ namespace OrangeJetpack.Localization
                 if (!LocalizedContent.TryDeserialize(propertyValue, out localizedContents))
                 {
                     continue;
-                } 
-                    
+                }
+
                 var contentForLanguage = GetContentForLanguage(localizedContents, language);
 
                 var propertyInfo = (PropertyInfo)memberExpression.Member;
@@ -150,7 +207,7 @@ namespace OrangeJetpack.Localization
         {
             if (!localizedContents.Any())
             {
-                throw new ArgumentException("Cannot localize property, no localized property values exist.", "localizedContents");
+                throw new ArgumentException("Cannot localize property, no localized property values exist.", nameof(localizedContents));
             }
 
             var localizedContent = localizedContents.SingleOrDefault(i => i.Key.Equals(language) && !string.IsNullOrWhiteSpace(i.Value));
@@ -162,6 +219,40 @@ namespace OrangeJetpack.Localization
         {
             return localizedContents.SingleOrDefault(i => i.Key.Equals(LocalizedContent.DefaultLanguage)) ??
                    localizedContents.First();
+        }
+
+        /// <summary>
+        /// Sets an item's localized content property from a <see cref="LocalizedContent"/> collection.
+        /// </summary>
+        /// <param name="item">An ILocalizable item.</param>
+        /// <param name="property">The property to set.</param>
+        /// <param name="content">The collection of localized content.</param>
+        /// <returns>The original item with localized property sety.</returns>
+        public static T Set<T>(this T item, Expression<Func<T, string>> property, IEnumerable<LocalizedContent> content) where T : class, ILocalizable
+        {
+            var memberExpression = (MemberExpression)property.Body;
+            var propertyInfo = (PropertyInfo)memberExpression.Member;
+            propertyInfo.SetValue(item, content.Serialize(), null);
+
+            return item;
+        }
+
+        /// <summary>
+        /// Sets an item's localized content property from a dictionary.
+        /// </summary>
+        /// <param name="item">An ILocalizable item.</param>
+        /// <param name="property">The property to set.</param>
+        /// <param name="content">The dictionary of localized content.</param>
+        /// <returns>The original item with localized property sety.</returns>
+        public static T Set<T>(this T item, Expression<Func<T, string>> property, IDictionary<string, string> content) where T : class, ILocalizable
+        {
+            var localizedContents = content.Select(i => new LocalizedContent
+            {
+                Key = i.Key,
+                Value = i.Value
+            });
+
+            return Set(item, property, localizedContents);
         }
     }
 }
