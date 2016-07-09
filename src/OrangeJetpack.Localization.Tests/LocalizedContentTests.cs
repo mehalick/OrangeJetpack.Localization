@@ -18,20 +18,25 @@ namespace OrangeJetpack.Localization.Tests
             [Localized]
             public string PropertyB { get; set; }
 
+            public string PropertyC { get; set; } = "NOT LOCALIZED";
+
             public TestClassA ChildA { get; set; }
             public TestClassB ChildB { get; set; }
 
             public ICollection<TestClassA> ChildrenA { get; set; }
             public ICollection<TestClassB> ChildrenB { get; set; }
-            public ICollection<object> NonLocalizedCollection { get; set; }
+            public ICollection<object> NonLocalizedCollection { get; set; } = new object[] {"I'M", "NOT", "LOCALIZED"};
         }
 
         public class TestClassB : ILocalizable
         {
-            public int Id { get; set; } = 1;
-
             [Localized]
             public string PropertyA { get; set; }
+
+            [Localized]
+            public string PropertyB { get; set; }
+
+            public string PropertyC { get; set; } = "NOT LOCALIZED";
         }
 
         private const string DEFAULT_LANGUAGE = "en";
@@ -284,10 +289,6 @@ namespace OrangeJetpack.Localization.Tests
                     {
                         PropertyA = localizedContent
                     }
-                },
-                NonLocalizedCollection = new object[]
-                {
-                    "A", "B", "C"
                 }
             };
 
