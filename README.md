@@ -1,6 +1,6 @@
 # OrangeJetpack.Localization
 
-[![Build status](https://ci.appveyor.com/api/projects/status/hoqf1taijirw7h84?svg=true)](https://ci.appveyor.com/project/AndyMehalick/orangejetpack-localization)
+[![Build status](https://ci.appveyor.com/api/projects/status/hoqf1taijirw7h84/branch/master?svg=true)](https://ci.appveyor.com/project/AndyMehalick/orangejetpack-localization/branch/master) [![NuGet](https://img.shields.io/nuget/v/OrangeJetpack.Localization.svg?maxAge=2592000)](https://www.nuget.org/packages/OrangeJetpack.Localization/)
 
 Orange Jetpack Localization is a library that simplifies the storage and retrieval of multi-language POCOs in a database. It provides interfaces and attributes for setting up localizable classes and extension methods for setting and getting objects and properties.
 
