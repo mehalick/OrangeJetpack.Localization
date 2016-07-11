@@ -10,7 +10,7 @@ https://andy.mehalick.com/2013/09/07/localizing-entity-framework-poco-properties
 
 ## Getting Started
 
-```
+```powershell
 Install-Package OrangeJetpack.Localization
 ```
 
@@ -18,7 +18,7 @@ Install-Package OrangeJetpack.Localization
 
 Localization provides an interface and a property attribute for setting up classes that can be localized:
 
-```
+```csharp
 public class Planet : ILocalizable
 {
     [Localized]
@@ -30,7 +30,7 @@ public class Planet : ILocalizable
 
 You can use the Set<T>() extension method to set properties directly:
 
-```
+```csharp
 var planet = new Planet();
 
 var name = new Dictionary<string, string>
@@ -45,7 +45,7 @@ planet.Set(i => i.Name, name);
 
 ### Setting Properties from Model Binding:
 
-```
+```csharp
 [HttpPost, ValidateAntiForgeryToken]
 public ActionResult Edit(Planet planet, LocalizedContent[] name)
 {
@@ -63,25 +63,25 @@ You can use Localize<T>() extension methods to get a localized instance of an IL
 
 #### Single Object
 
-```
+```csharp
 var planet = _db.Planets.SingleOrDefault(i => i.Id == 1).Localize("en");
 ```
 
 #### Localizing a Collection
 
-```
+```csharp
 var planets = _db.Planets.Localize("en");
 ```
 
 #### Localizing Specific Properties
 
-```
+```csharp
 var planets = _db.Planets.Localize("en", i => i.Name);
 ```
 
 #### Controlling Depth of Localization
 
-```
+```csharp
 // localizes only root objects (DEFAULT)
 var planets = _db.Planets.Localize("en", LocalizationDepth.Shallow);
 
