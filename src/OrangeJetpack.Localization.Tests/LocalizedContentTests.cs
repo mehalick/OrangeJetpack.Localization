@@ -55,7 +55,7 @@ namespace OrangeJetpack.Localization.Tests
         }
 
         [Test]
-        public void Localize_NoPropertiesSpecified_LocalizesAllProperties()
+        public void LocalizeItem_NoPropertiesSpecified_LocalizesAllProperties()
         {
             var localizedContent = GetLocalizedContent();
 
@@ -83,124 +83,7 @@ namespace OrangeJetpack.Localization.Tests
         }
 
         [Test]
-        public void Localize_SinglePropertyWithDefaultLanguage_LocalizesCorrectly()
-        {
-            var localizedField = new LocalizedContent(DEFAULT_LANGUAGE, ANY_STRING_1);
-
-            var testClasses = new[]
-            {
-                new TestClassA {PropertyA = localizedField.Serialize()}
-            };
-
-            var localized = testClasses.Localize(DEFAULT_LANGUAGE, i => i.PropertyA);
-
-            Assert.AreEqual(ANY_STRING_1, localized.Single().PropertyA);
-        }
-
-        [Test]
-        public void Localize_SinglePropertyWithTwoLanguages_DefaultLanguageLocalizesCorrectly()
-        {
-            var localizedContent = GetLocalizedContent();
-
-            var testClasses = new[]
-            {
-                new TestClassA {PropertyA = localizedContent}
-            };
-
-            var localized = testClasses.Localize(DEFAULT_LANGUAGE, i => i.PropertyA);
-
-            Assert.AreEqual(ANY_STRING_1, localized.Single().PropertyA);
-        }
-
-        [Test]
-        public void Localize_SinglePropertyWithTwoLanguages_NonDefaultLanguageLocalizesCorrectly()
-        {
-            var localizedContent = GetLocalizedContent();
-
-            var testClasses = new[]
-            {
-                new TestClassA {PropertyA = localizedContent}
-            };
-
-            var localized = testClasses.Localize(OTHER_LANGUAGE, i => i.PropertyA);
-
-            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyA);
-        }
-
-        [Test]
-        public void Localize_MultiplePropertiesWithTwoLanguages_NonDefaultLanguageLocalizesCorrectly()
-        {
-            var localizedContent = GetLocalizedContent();
-
-            var testClasses = new[]
-            {
-                new TestClassA
-                {
-                    PropertyA = localizedContent,
-                    PropertyB = localizedContent
-                }
-            };
-
-            var localized = testClasses.Localize(OTHER_LANGUAGE, i => i.PropertyA, i => i.PropertyB).ToList();
-
-            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyA);
-            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyB);
-        }
-
-        [Test]
-        public void Localize_SinglePropertyRequestedLanguageNotFound_LocalizesToDefaultLanguage()
-        {
-            var localizedFields = new[]
-            {
-                new LocalizedContent(DEFAULT_LANGUAGE, ANY_STRING_1)
-            };
-
-            var testClasses = new[]
-            {
-                new TestClassA {PropertyA = localizedFields.Serialize()}
-            };
-
-            var localized = testClasses.Localize(OTHER_LANGUAGE, i => i.PropertyA);
-
-            Assert.AreEqual(ANY_STRING_1, localized.Single().PropertyA);
-        }
-
-        [Test]
-        public void Localize_SinglePropertyRequestedLanguageNotFoundAndNoDefaultLanguage_LocalizesToFirst()
-        {
-            var localizedFields = new[]
-            {
-                new LocalizedContent(OTHER_LANGUAGE, ANY_STRING_2)
-            };
-
-            var testClasses = new[]
-            {
-                new TestClassA {PropertyA = localizedFields.Serialize()}
-            };
-
-            const string someOtherLanguage = OTHER_LANGUAGE + "yy";
-            var localized = testClasses.Localize(someOtherLanguage, i => i.PropertyA);
-
-            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyA);
-        }
-
-        [Test]
-        public void Localize_NonserializedProperty_ReturnsOriginalValueWithoutThrowingException()
-        {
-            const string notSerializedJson = "1";
-
-            var testClasses = new[]
-            {
-                new TestClassA {PropertyA = notSerializedJson}
-            };
-
-            var localized = testClasses.Localize(DEFAULT_LANGUAGE, i => i.PropertyA);
-
-            Assert.AreEqual(notSerializedJson, localized.Single().PropertyA);
-        }
-
-        [Test]
-        public void Localize_WithLocalizableChildren_LocalizesChildren()
+        public void LocalizeItem_WithLocalizableChildren_LocalizesChildren()
         {
             var localizedContent = GetLocalizedContent();
 
@@ -223,7 +106,7 @@ namespace OrangeJetpack.Localization.Tests
         }
 
         [Test]
-        public void Localize_LocalizationDepthIsShallow_DoesNotLocalizeChildred()
+        public void LocalizeItem_LocalizationDepthIsShallow_DoesNotLocalizeChildred()
         {
             var localizedContent = GetLocalizedContent();
 
@@ -243,7 +126,7 @@ namespace OrangeJetpack.Localization.Tests
         }
 
         [Test]
-        public void Localize_LocalizationDepthIsOneLevel_OnlyImmediateChildrenLocalized()
+        public void LocalizeItem_LocalizationDepthIsOneLevel_OnlyImmediateChildrenLocalized()
         {
             var localizedContent = GetLocalizedContent();
 
@@ -266,7 +149,7 @@ namespace OrangeJetpack.Localization.Tests
         }
 
         [Test]
-        public void Localize_HasCollectionOfLocalizableChildren_LocalizesCollection()
+        public void LocalizeItem_HasCollectionOfLocalizableChildren_LocalizesCollection()
         {
             var localizedContent = GetLocalizedContent();
 
@@ -297,6 +180,142 @@ namespace OrangeJetpack.Localization.Tests
             Assert.AreEqual(ANY_STRING_1, localized.ChildrenA.ElementAt(0).PropertyA);
             Assert.AreEqual(ANY_STRING_1, localized.ChildrenA.ElementAt(1).PropertyA);
             Assert.AreEqual(ANY_STRING_1, localized.ChildrenB.ElementAt(0).PropertyA);
+        }
+
+        [Test]
+        public void LocalizeCollection_MultiplePropertiesNoParamsSpecified_LocalizesCorrectly()
+        {
+            var localizedField = GetLocalizedContent();
+
+            var testClasses = new []
+            {
+                new TestClassA {PropertyA = localizedField, PropertyB = localizedField},
+                new TestClassA {PropertyA = localizedField, PropertyB = localizedField}
+            };
+
+            var localized = testClasses.Localize<TestClassA>(DEFAULT_LANGUAGE).ToList();
+
+            Assert.AreEqual(ANY_STRING_1, localized.ElementAt(0).PropertyA);
+            Assert.AreEqual(ANY_STRING_1, localized.ElementAt(0).PropertyB);
+            Assert.AreEqual(ANY_STRING_1, localized.ElementAt(1).PropertyA);
+            Assert.AreEqual(ANY_STRING_1, localized.ElementAt(1).PropertyB);
+        }
+
+        [Test]
+        public void LocalizeCollection_SinglePropertyWithDefaultLanguage_LocalizesCorrectly()
+        {
+            var localizedField = GetLocalizedContent();
+
+            var testClasses = new[]
+            {
+                new TestClassA {PropertyA = localizedField}
+            };
+
+            var localized = testClasses.Localize(DEFAULT_LANGUAGE, i => i.PropertyA);
+
+            Assert.AreEqual(ANY_STRING_1, localized.Single().PropertyA);
+        }
+
+        [Test]
+        public void LocalizeCollection_SinglePropertyWithTwoLanguages_DefaultLanguageLocalizesCorrectly()
+        {
+            var localizedContent = GetLocalizedContent();
+
+            var testClasses = new[]
+            {
+                new TestClassA {PropertyA = localizedContent}
+            };
+
+            var localized = testClasses.Localize(DEFAULT_LANGUAGE, i => i.PropertyA);
+
+            Assert.AreEqual(ANY_STRING_1, localized.Single().PropertyA);
+        }
+
+        [Test]
+        public void LocalizeCollection_SinglePropertyWithTwoLanguages_NonDefaultLanguageLocalizesCorrectly()
+        {
+            var localizedContent = GetLocalizedContent();
+
+            var testClasses = new[]
+            {
+                new TestClassA {PropertyA = localizedContent}
+            };
+
+            var localized = testClasses.Localize(OTHER_LANGUAGE, i => i.PropertyA);
+
+            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyA);
+        }
+
+        [Test]
+        public void LocalizeCollection_MultiplePropertiesWithTwoLanguages_NonDefaultLanguageLocalizesCorrectly()
+        {
+            var localizedContent = GetLocalizedContent();
+
+            var testClasses = new[]
+            {
+                new TestClassA
+                {
+                    PropertyA = localizedContent,
+                    PropertyB = localizedContent
+                }
+            };
+
+            var localized = testClasses.Localize(OTHER_LANGUAGE, i => i.PropertyA, i => i.PropertyB).ToList();
+
+            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyA);
+            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyB);
+        }
+
+        [Test]
+        public void LocalizeCollection_SinglePropertyRequestedLanguageNotFound_LocalizesToDefaultLanguage()
+        {
+            var localizedFields = new[]
+            {
+                new LocalizedContent(DEFAULT_LANGUAGE, ANY_STRING_1)
+            };
+
+            var testClasses = new[]
+            {
+                new TestClassA {PropertyA = localizedFields.Serialize()}
+            };
+
+            var localized = testClasses.Localize(OTHER_LANGUAGE, i => i.PropertyA);
+
+            Assert.AreEqual(ANY_STRING_1, localized.Single().PropertyA);
+        }
+
+        [Test]
+        public void LocalizeCollection_SinglePropertyRequestedLanguageNotFoundAndNoDefaultLanguage_LocalizesToFirst()
+        {
+            var localizedFields = new[]
+            {
+                new LocalizedContent(OTHER_LANGUAGE, ANY_STRING_2)
+            };
+
+            var testClasses = new[]
+            {
+                new TestClassA {PropertyA = localizedFields.Serialize()}
+            };
+
+            const string someOtherLanguage = OTHER_LANGUAGE + "yy";
+            var localized = testClasses.Localize(someOtherLanguage, i => i.PropertyA);
+
+            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyA);
+        }
+
+        [Test]
+        public void LocalizeCollection_NonserializedProperty_ReturnsOriginalValueWithoutThrowingException()
+        {
+            const string notSerializedJson = "1";
+
+            var testClasses = new[]
+            {
+                new TestClassA {PropertyA = notSerializedJson}
+            };
+
+            var localized = testClasses.Localize(DEFAULT_LANGUAGE, i => i.PropertyA);
+
+            Assert.AreEqual(notSerializedJson, localized.Single().PropertyA);
         }
 
         [Test]
