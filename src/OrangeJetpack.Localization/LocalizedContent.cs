@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace OrangeJetpack.Localization
 {
@@ -87,7 +88,7 @@ namespace OrangeJetpack.Localization
                 localizedContent = Deserialize(serializedContents);
                 return true;
             }
-            catch (JsonSerializationException)
+            catch (Exception ex) when (ex is JsonReaderException || ex is JsonSerializationException)
             {
                 localizedContent = new[] { new LocalizedContent(DefaultLanguage, serializedContents) };
                 return false;
