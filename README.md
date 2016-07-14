@@ -1,6 +1,6 @@
 # OrangeJetpack.Localization
 
-[![Build status](https://ci.appveyor.com/api/projects/status/hoqf1taijirw7h84/branch/master?svg=true)](https://ci.appveyor.com/project/AndyMehalick/orangejetpack-localization/branch/master) [![NuGet](https://img.shields.io/nuget/v/OrangeJetpack.Localization.svg?maxAge=2592000)](https://www.nuget.org/packages/OrangeJetpack.Localization/)
+[![Build status](https://ci.appveyor.com/api/projects/status/hoqf1taijirw7h84/branch/master?svg=true)](https://ci.appveyor.com/project/AndyMehalick/orangejetpack-localization/branch/master) [![NuGet](https://img.shields.io/nuget/v/OrangeJetpack.Localization.svg?maxAge=3600)](https://www.nuget.org/packages/OrangeJetpack.Localization/)
 
 Orange Jetpack Localization is a library that simplifies the storage and retrieval of multi-language POCOs in a database. It provides interfaces and attributes for setting up localizable classes and extension methods for setting and getting objects and properties.
 
@@ -37,7 +37,8 @@ var name = new Dictionary<string, string>
 {
     {"en", "Earth"},
     {"ru", "Земля"},
-    {"jp", "地球"} 
+    {"ja", "地球"},
+    {"ar", "أرض" }
 };
 
 planet.Set(i => i.Name, name);
@@ -49,8 +50,8 @@ planet.Set(i => i.Name, name);
 [HttpPost, ValidateAntiForgeryToken]
 public ActionResult Edit(Planet planet, LocalizedContent[] name)
 {
-    planet.Name = name.Serialize();
-
+    planet.Set(i => i.Name, name);
+    
     //...
 
     return View();
@@ -70,7 +71,7 @@ var planet = _db.Planets.SingleOrDefault(i => i.Id == 1).Localize("en");
 #### Localizing a Collection
 
 ```csharp
-var planets = _db.Planets.Localize("en");
+var planets = _db.Planets.Localize<Planet>("en");
 ```
 
 #### Localizing Specific Properties
@@ -83,11 +84,11 @@ var planets = _db.Planets.Localize("en", i => i.Name);
 
 ```csharp
 // localizes only root objects (DEFAULT)
-var planets = _db.Planets.Localize("en", LocalizationDepth.Shallow);
+var planets = _db.Planets.Localize<Planet>("en", LocalizationDepth.Shallow);
 
 // localizes only root objects and immediate children (properties and collections)
-var planets = _db.Planets.Localize("en", LocalizationDepth.OneLevel);
+var planets = _db.Planets.Localize<Planet>("en", LocalizationDepth.OneLevel);
 
 // localizes only root objects and all children recursively
-var planets = _db.Planets.Localize("en", LocalizationDepth.Deep);
+var planets = _db.Planets.Localize<Planet>("en", LocalizationDepth.Deep);
 ```

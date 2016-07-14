@@ -11,18 +11,48 @@ namespace OrangeJetpack.Localization
         /// <summary>
         /// The default language to use when a language is needed.
         /// </summary>
-        /// <returns>The first language in AppSettings["LocalizationLanguages"] or "en" if no settings.</returns>
-        public static string DefaultLanguage => GetLanguagesFromAppSettings().First();
+        /// <returns>The first language in AppSettings["Localization.RequiredLanguages"] or "en" if no settings.</returns>
+        public static string DefaultLanguage => AllLanguages.First();
 
-        private static IEnumerable<string> GetLanguagesFromAppSettings()
+        /// <summary>
+        /// The languages as specified in AppSettings["Localization.RequiredLanguages"] and AppSettings["Localization.OptionalLanguages"].
+        /// </summary>
+        public static IEnumerable<string> AllLanguages => RequiredLanguages.Union(OptionalLanguages);
+
+        /// <summary>
+        /// The required languages as specified in AppSettings["Localization.RequiredLanguages"].
+        /// </summary>
+        public static IEnumerable<string> RequiredLanguages
         {
-            var appSetting = ConfigurationManager.AppSettings["LocalizationLanguages"];
-            if (string.IsNullOrWhiteSpace(appSetting))
+            get
             {
-                return new[]{ "en" };
-            }
+                var languages = ConfigurationManager.AppSettings["Localization.RequiredLanguages"] ??
+                                ConfigurationManager.AppSettings["LocalizationLanguages"];
 
-            return appSetting.Split(',');
+                if (string.IsNullOrWhiteSpace(languages))
+                {
+                    throw new Exception("No localization languages specified in AppSettings[\"Localization.RequiredLanguages\"].");
+                }
+
+                return languages.Split(',');
+            }
+        }
+
+        /// <summary>
+        /// The optional languages as specified in AppSettings["Localization.OptionalLanguages"].
+        /// </summary>
+        public static IEnumerable<string> OptionalLanguages
+        {
+            get
+            {
+                var languages = ConfigurationManager.AppSettings["Localization.OptionalLanguages"];
+                if (string.IsNullOrWhiteSpace(languages))
+                {
+                    return Enumerable.Empty<string>();
+                }
+
+                return languages.Split(',');
+            }
         }
 
         /// <summary>
@@ -39,7 +69,6 @@ namespace OrangeJetpack.Localization
 
         public LocalizedContent()
         {
-
         }
 
         public LocalizedContent(string key, string value)
@@ -53,7 +82,7 @@ namespace OrangeJetpack.Localization
         /// </summary>
         public static string Init()
         {
-            var defaults = GetLanguagesFromAppSettings().Select(i => new LocalizedContent(i, ""));
+            var defaults = AllLanguages.Select(i => new LocalizedContent(i, ""));
 
             return Serialize(defaults);
         }
