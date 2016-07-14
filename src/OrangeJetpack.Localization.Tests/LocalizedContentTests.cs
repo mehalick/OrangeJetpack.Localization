@@ -119,7 +119,7 @@ namespace OrangeJetpack.Localization.Tests
                 }
             };
 
-            var localized = testClass.Localize(DEFAULT_LANGUAGE, LocalizationDepth.Shallow);
+            var localized = testClass.Localize(DEFAULT_LANGUAGE);
 
             Assert.AreNotEqual(ANY_STRING_1, localized.ChildA.PropertyA);
             Assert.AreNotEqual(ANY_STRING_1, localized.ChildA.PropertyB);

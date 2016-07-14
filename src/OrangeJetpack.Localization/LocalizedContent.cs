@@ -31,7 +31,7 @@ namespace OrangeJetpack.Localization
 
                 if (string.IsNullOrWhiteSpace(languages))
                 {
-                    throw new Exception("No localization languages specified in AppSettings[\"Localization.RequiredLanguages\"].");
+                    return new[] {"en"};
                 }
 
                 return languages.Split(',');
