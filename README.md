@@ -37,7 +37,8 @@ var name = new Dictionary<string, string>
 {
     {"en", "Earth"},
     {"ru", "Земля"},
-    {"jp", "地球"} 
+    {"ja", "地球"},
+    {"ar", "أرض" }
 };
 
 planet.Set(i => i.Name, name);
