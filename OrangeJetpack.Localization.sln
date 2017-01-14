@@ -1,16 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrangeJetpack.Localization", "src\OrangeJetpack.Localization\OrangeJetpack.Localization.csproj", "{B864C6AD-7559-43A3-BE34-E1A3FA0E5DBA}"
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "OrangeJetpack.Localization", "src\OrangeJetpack.Localization\OrangeJetpack.Localization.xproj", "{08815FA5-B07D-4D33-936C-690344B2BE6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrangeJetpack.Localization.Tests", "src\OrangeJetpack.Localization.Tests\OrangeJetpack.Localization.Tests.csproj", "{3A1C03D2-BA7A-4BDA-AC47-925618D9AA74}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{941F2BA1-24DF-41ED-921A-23FB5B77A14C}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "OrangeJetpack.Localization.Tests", "test\OrangeJetpack.Localization.Tests\OrangeJetpack.Localization.Tests.xproj", "{98BBE71A-82FC-4A45-839B-A1716D49F481}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B864C6AD-7559-43A3-BE34-E1A3FA0E5DBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B864C6AD-7559-43A3-BE34-E1A3FA0E5DBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B864C6AD-7559-43A3-BE34-E1A3FA0E5DBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B864C6AD-7559-43A3-BE34-E1A3FA0E5DBA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3A1C03D2-BA7A-4BDA-AC47-925618D9AA74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3A1C03D2-BA7A-4BDA-AC47-925618D9AA74}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3A1C03D2-BA7A-4BDA-AC47-925618D9AA74}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3A1C03D2-BA7A-4BDA-AC47-925618D9AA74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08815FA5-B07D-4D33-936C-690344B2BE6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08815FA5-B07D-4D33-936C-690344B2BE6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08815FA5-B07D-4D33-936C-690344B2BE6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08815FA5-B07D-4D33-936C-690344B2BE6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98BBE71A-82FC-4A45-839B-A1716D49F481}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98BBE71A-82FC-4A45-839B-A1716D49F481}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98BBE71A-82FC-4A45-839B-A1716D49F481}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98BBE71A-82FC-4A45-839B-A1716D49F481}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

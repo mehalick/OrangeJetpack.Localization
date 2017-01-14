@@ -1,13 +1,12 @@
-﻿using NUnit.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Xunit;
 
 namespace OrangeJetpack.Localization.Tests
 {
     // ReSharper disable InconsistentNaming
     // ReSharper disable PossibleNullReferenceException
 
-    [TestFixture]
     public class LocalizedContentTests
     {
         public class TestClassA : ILocalizable
@@ -54,7 +53,7 @@ namespace OrangeJetpack.Localization.Tests
             return localizedContent.Serialize();
         }
 
-        [Test]
+        [Fact]
         public void LocalizeItem_NoPropertiesSpecified_LocalizesAllProperties()
         {
             var localizedContent = GetLocalizedContent();
@@ -73,16 +72,16 @@ namespace OrangeJetpack.Localization.Tests
 
             testClass1.Localize(DEFAULT_LANGUAGE);
 
-            Assert.AreEqual(ANY_STRING_1, testClass1.PropertyA);
-            Assert.AreEqual(ANY_STRING_1, testClass1.PropertyB);
+            Assert.Equal(ANY_STRING_1, testClass1.PropertyA);
+            Assert.Equal(ANY_STRING_1, testClass1.PropertyB);
 
             testClass2.Localize(OTHER_LANGUAGE);
 
-            Assert.AreEqual(ANY_STRING_2, testClass2.PropertyA);
-            Assert.AreEqual(ANY_STRING_2, testClass2.PropertyB);
+            Assert.Equal(ANY_STRING_2, testClass2.PropertyA);
+            Assert.Equal(ANY_STRING_2, testClass2.PropertyB);
         }
 
-        [Test]
+        [Fact]
         public void LocalizeItem_WithLocalizableChildren_LocalizesChildren()
         {
             var localizedContent = GetLocalizedContent();
@@ -101,11 +100,11 @@ namespace OrangeJetpack.Localization.Tests
 
             var localized = testClass.Localize(DEFAULT_LANGUAGE, LocalizationDepth.Deep);
 
-            Assert.AreEqual(ANY_STRING_1, localized.ChildA.PropertyA);
-            Assert.AreEqual(ANY_STRING_1, localized.ChildA.ChildA.PropertyA);
+            Assert.Equal(ANY_STRING_1, localized.ChildA.PropertyA);
+            Assert.Equal(ANY_STRING_1, localized.ChildA.ChildA.PropertyA);
         }
 
-        [Test]
+        [Fact]
         public void LocalizeItem_LocalizationDepthIsShallow_DoesNotLocalizeChildred()
         {
             var localizedContent = GetLocalizedContent();
@@ -121,11 +120,11 @@ namespace OrangeJetpack.Localization.Tests
 
             var localized = testClass.Localize(DEFAULT_LANGUAGE);
 
-            Assert.AreNotEqual(ANY_STRING_1, localized.ChildA.PropertyA);
-            Assert.AreNotEqual(ANY_STRING_1, localized.ChildA.PropertyB);
+            Assert.NotEqual(ANY_STRING_1, localized.ChildA.PropertyA);
+            Assert.NotEqual(ANY_STRING_1, localized.ChildA.PropertyB);
         }
 
-        [Test]
+        [Fact]
         public void LocalizeItem_LocalizationDepthIsOneLevel_OnlyImmediateChildrenLocalized()
         {
             var localizedContent = GetLocalizedContent();
@@ -144,11 +143,11 @@ namespace OrangeJetpack.Localization.Tests
 
             var localized = testClass.Localize(DEFAULT_LANGUAGE, LocalizationDepth.OneLevel);
 
-            Assert.AreEqual(ANY_STRING_1, localized.ChildA.PropertyA);
-            Assert.AreNotEqual(ANY_STRING_1, localized.ChildA.ChildA.PropertyA);
+            Assert.Equal(ANY_STRING_1, localized.ChildA.PropertyA);
+            Assert.NotEqual(ANY_STRING_1, localized.ChildA.ChildA.PropertyA);
         }
 
-        [Test]
+        [Fact]
         public void LocalizeItem_HasCollectionOfLocalizableChildren_LocalizesCollection()
         {
             var localizedContent = GetLocalizedContent();
@@ -177,12 +176,12 @@ namespace OrangeJetpack.Localization.Tests
 
             var localized = testClass.Localize(DEFAULT_LANGUAGE, LocalizationDepth.Deep);
 
-            Assert.AreEqual(ANY_STRING_1, localized.ChildrenA.ElementAt(0).PropertyA);
-            Assert.AreEqual(ANY_STRING_1, localized.ChildrenA.ElementAt(1).PropertyA);
-            Assert.AreEqual(ANY_STRING_1, localized.ChildrenB.ElementAt(0).PropertyA);
+            Assert.Equal(ANY_STRING_1, localized.ChildrenA.ElementAt(0).PropertyA);
+            Assert.Equal(ANY_STRING_1, localized.ChildrenA.ElementAt(1).PropertyA);
+            Assert.Equal(ANY_STRING_1, localized.ChildrenB.ElementAt(0).PropertyA);
         }
 
-        [Test]
+        [Fact]
         public void LocalizeCollection_MultiplePropertiesNoParamsSpecified_LocalizesCorrectly()
         {
             var localizedField = GetLocalizedContent();
@@ -195,13 +194,13 @@ namespace OrangeJetpack.Localization.Tests
 
             var localized = testClasses.Localize<TestClassA>(DEFAULT_LANGUAGE).ToList();
 
-            Assert.AreEqual(ANY_STRING_1, localized.ElementAt(0).PropertyA);
-            Assert.AreEqual(ANY_STRING_1, localized.ElementAt(0).PropertyB);
-            Assert.AreEqual(ANY_STRING_1, localized.ElementAt(1).PropertyA);
-            Assert.AreEqual(ANY_STRING_1, localized.ElementAt(1).PropertyB);
+            Assert.Equal(ANY_STRING_1, localized.ElementAt(0).PropertyA);
+            Assert.Equal(ANY_STRING_1, localized.ElementAt(0).PropertyB);
+            Assert.Equal(ANY_STRING_1, localized.ElementAt(1).PropertyA);
+            Assert.Equal(ANY_STRING_1, localized.ElementAt(1).PropertyB);
         }
 
-        [Test]
+        [Fact]
         public void LocalizeCollection_SinglePropertyWithDefaultLanguage_LocalizesCorrectly()
         {
             var localizedField = GetLocalizedContent();
@@ -213,10 +212,10 @@ namespace OrangeJetpack.Localization.Tests
 
             var localized = testClasses.Localize(DEFAULT_LANGUAGE, i => i.PropertyA);
 
-            Assert.AreEqual(ANY_STRING_1, localized.Single().PropertyA);
+            Assert.Equal(ANY_STRING_1, localized.Single().PropertyA);
         }
 
-        [Test]
+        [Fact]
         public void LocalizeCollection_SinglePropertyWithTwoLanguages_DefaultLanguageLocalizesCorrectly()
         {
             var localizedContent = GetLocalizedContent();
@@ -228,10 +227,10 @@ namespace OrangeJetpack.Localization.Tests
 
             var localized = testClasses.Localize(DEFAULT_LANGUAGE, i => i.PropertyA);
 
-            Assert.AreEqual(ANY_STRING_1, localized.Single().PropertyA);
+            Assert.Equal(ANY_STRING_1, localized.Single().PropertyA);
         }
 
-        [Test]
+        [Fact]
         public void LocalizeCollection_SinglePropertyWithTwoLanguages_NonDefaultLanguageLocalizesCorrectly()
         {
             var localizedContent = GetLocalizedContent();
@@ -243,10 +242,10 @@ namespace OrangeJetpack.Localization.Tests
 
             var localized = testClasses.Localize(OTHER_LANGUAGE, i => i.PropertyA);
 
-            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyA);
+            Assert.Equal(ANY_STRING_2, localized.Single().PropertyA);
         }
 
-        [Test]
+        [Fact]
         public void LocalizeCollection_MultiplePropertiesWithTwoLanguages_NonDefaultLanguageLocalizesCorrectly()
         {
             var localizedContent = GetLocalizedContent();
@@ -262,11 +261,11 @@ namespace OrangeJetpack.Localization.Tests
 
             var localized = testClasses.Localize(OTHER_LANGUAGE, i => i.PropertyA, i => i.PropertyB).ToList();
 
-            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyA);
-            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyB);
+            Assert.Equal(ANY_STRING_2, localized.Single().PropertyA);
+            Assert.Equal(ANY_STRING_2, localized.Single().PropertyB);
         }
 
-        [Test]
+        [Fact]
         public void LocalizeCollection_SinglePropertyRequestedLanguageNotFound_LocalizesToDefaultLanguage()
         {
             var localizedFields = new[]
@@ -281,10 +280,10 @@ namespace OrangeJetpack.Localization.Tests
 
             var localized = testClasses.Localize(OTHER_LANGUAGE, i => i.PropertyA);
 
-            Assert.AreEqual(ANY_STRING_1, localized.Single().PropertyA);
+            Assert.Equal(ANY_STRING_1, localized.Single().PropertyA);
         }
 
-        [Test]
+        [Fact]
         public void LocalizeCollection_SinglePropertyRequestedLanguageNotFoundAndNoDefaultLanguage_LocalizesToFirst()
         {
             var localizedFields = new[]
@@ -300,10 +299,10 @@ namespace OrangeJetpack.Localization.Tests
             const string someOtherLanguage = OTHER_LANGUAGE + "yy";
             var localized = testClasses.Localize(someOtherLanguage, i => i.PropertyA);
 
-            Assert.AreEqual(ANY_STRING_2, localized.Single().PropertyA);
+            Assert.Equal(ANY_STRING_2, localized.Single().PropertyA);
         }
 
-        [Test]
+        [Fact]
         public void LocalizeCollection_NonserializedProperty_ReturnsOriginalValueWithoutThrowingException()
         {
             const string notSerializedJson = "1";
@@ -315,10 +314,10 @@ namespace OrangeJetpack.Localization.Tests
 
             var localized = testClasses.Localize(DEFAULT_LANGUAGE, i => i.PropertyA);
 
-            Assert.AreEqual(notSerializedJson, localized.Single().PropertyA);
+            Assert.Equal(notSerializedJson, localized.Single().PropertyA);
         }
 
-        [Test]
+        [Fact]
         public void Set_ProvideLocalizedContentArray_SetsProperty()
         {
             var testClass = new TestClassA();
@@ -333,10 +332,10 @@ namespace OrangeJetpack.Localization.Tests
 
             var localized = testClass.Localize(DEFAULT_LANGUAGE);
 
-            Assert.AreEqual(ANY_STRING_1, localized.PropertyA);
+            Assert.Equal(ANY_STRING_1, localized.PropertyA);
         }
 
-        [Test]
+        [Fact]
         public void Set_ProvideLocalizedContentDictionary_SetsProperty()
         {
             var testClass = new TestClassA();
@@ -351,7 +350,7 @@ namespace OrangeJetpack.Localization.Tests
 
             var localized = testClass.Localize(DEFAULT_LANGUAGE);
 
-            Assert.AreEqual(ANY_STRING_1, localized.PropertyA);
+            Assert.Equal(ANY_STRING_1, localized.PropertyA);
         }
     }
 

@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("OrangeJetpack.Localization")]
+[assembly: AssemblyProduct("OrangeJetpack.Localization.Tests")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -16,4 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("08815fa5-b07d-4d33-936c-690344b2be6c")]
+[assembly: Guid("98bbe71a-82fc-4a45-839b-a1716d49f481")]
