@@ -1,0 +1,25 @@
+﻿{
+  "version": "2.0.0-beta-*",
+  "summary": "Localized POCO entity properties with JSON.",
+  "authors": [ "Andy Mehalick" ],
+  "packOptions": {
+    "summary": "Localized POCO entity properties with JSON.",
+    "iconUrl": "https://ojs.azureedge.net/assets/orange-jetpack-logo-white-128x128-635776631313452039.png",
+    "licenseUrl": "https://github.com/mehalick/OrangeJetpack.Localization/blob/master/LICENSE",
+    "projectUrl": "https://github.com/mehalick/OrangeJetpack.Localization",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/mehalick/OrangeJetpack.Localization"
+    }
+  },
+  "dependencies": {
+    "NETStandard.Library": "1.6.0",
+    "Newtonsoft.Json": "9.0.1",
+    "System.ComponentModel.Annotations": "4.3.0"
+  },
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}

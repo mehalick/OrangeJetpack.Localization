@@ -116,6 +116,7 @@ namespace OrangeJetpack.Localization
             }
 
             var children = item.GetType()
+                .GetTypeInfo()
                 .GetProperties()
                 .Select(i => i.GetValue(item, null) as ILocalizable)
                 .Where(i => i != null);
@@ -139,6 +140,7 @@ namespace OrangeJetpack.Localization
             }
 
             var collections = item.GetType()
+                .GetTypeInfo()
                 .GetProperties()
                 .Select(i => i.GetValue(item) as IEnumerable)
                 .Where(i => i != null);
@@ -156,8 +158,9 @@ namespace OrangeJetpack.Localization
         {
             var properties = item
                 .GetType()
+                .GetTypeInfo()
                 .GetProperties()
-                .Where(i => Attribute.IsDefined(i, typeof(LocalizedAttribute)));
+                .Where(i => i.IsDefined(typeof(LocalizedAttribute)));
 
             foreach (var propertyInfo in properties)
             {

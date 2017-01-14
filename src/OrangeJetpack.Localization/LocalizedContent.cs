@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 
 namespace OrangeJetpack.Localization
@@ -26,9 +25,7 @@ namespace OrangeJetpack.Localization
         {
             get
             {
-                var languages = ConfigurationManager.AppSettings["Localization.RequiredLanguages"] ??
-                                ConfigurationManager.AppSettings["LocalizationLanguages"];
-
+                var languages = "en"; // TODO read from config/settings
                 if (string.IsNullOrWhiteSpace(languages))
                 {
                     return new[] {"en"};
@@ -45,7 +42,7 @@ namespace OrangeJetpack.Localization
         {
             get
             {
-                var languages = ConfigurationManager.AppSettings["Localization.OptionalLanguages"];
+                var languages = "ar"; // TODO read from config/settings
                 if (string.IsNullOrWhiteSpace(languages))
                 {
                     return Enumerable.Empty<string>();
