@@ -189,13 +189,13 @@ namespace OrangeJetpack.Localization.Tests
             const string thirdLanguageCode = "eN";
             const string fourthLanguageCode = "en";
 
-            var contentsOne = new[]
+            var firstContentsArray = new[]
             {
                 new LocalizedContent(firstLanguageCode, "this is english content"),
                 new LocalizedContent(secondLanguageCode, "this is another content")
             };
 
-            var contentsTwo = new[]
+            var secondContentsArray = new[]
             {
                 new LocalizedContent(thirdLanguageCode, "this is english content"),
                 new LocalizedContent(fourthLanguageCode, "this is another content")
@@ -203,14 +203,14 @@ namespace OrangeJetpack.Localization.Tests
 
             var firstObj = new TestClassB
             {
-                PropertyA = contentsOne.First().Serialize(),
-                PropertyB = contentsOne.Last().Serialize()
+                PropertyA = firstContentsArray.First().Serialize(),
+                PropertyB = firstContentsArray.Last().Serialize()
             };
 
             var secondObj = new TestClassB
             {
-                PropertyA = contentsTwo.First().Serialize(),
-                PropertyB = contentsTwo.Last().Serialize()
+                PropertyA = secondContentsArray.First().Serialize(),
+                PropertyB = secondContentsArray.Last().Serialize()
             };
 
             const string localizationRequestLanguage = "en";
@@ -399,6 +399,32 @@ namespace OrangeJetpack.Localization.Tests
             var localized = testClasses.Localize(DEFAULT_LANGUAGE, i => i.PropertyA);
 
             Assert.Equal(notSerializedJson, localized.Single().PropertyA);
+        }
+
+        [Fact]
+        public void LocalizeCollection_ObjectsHaveDifferentLanguageCodeCases_LocalizesCorrectly()
+        {
+            const string firstLanguageCode = "eN";
+            const string secondLanguageCode = "En";
+
+            var contents = new[]
+            {
+                new LocalizedContent(firstLanguageCode, "this is english content"),
+                new LocalizedContent(secondLanguageCode, "this is another content")
+            };
+
+            var testClasses = new[]
+            {
+                new TestClassA {PropertyA = contents.First().Serialize(), PropertyB = contents.First().Serialize()},
+                new TestClassA {PropertyA = contents.Last().Serialize(), PropertyB = contents.Last().Serialize()}
+            };
+
+            var localized = testClasses.Localize<TestClassA>(firstLanguageCode.ToUpper()).ToList();
+
+            Assert.Equal("this is english content", localized.ElementAt(0).PropertyA);
+            Assert.Equal("this is english content", localized.ElementAt(0).PropertyB);
+            Assert.Equal("this is another content", localized.ElementAt(1).PropertyA);
+            Assert.Equal("this is another content", localized.ElementAt(1).PropertyB);
         }
 
         [Fact]
