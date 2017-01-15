@@ -182,11 +182,95 @@ namespace OrangeJetpack.Localization.Tests
         }
 
         [Fact]
+        public void LocalizeItem_PropertyHasDifferentCasesAndLowerCaseIsRequested_LocalizesAllProperties()
+        {
+            const string firstLanguageCode = "EN";
+            const string secondLanguageCode = "En";
+            const string thirdLanguageCode = "eN";
+            const string fourthLanguageCode = "en";
+
+            var contentsOne = new[]
+            {
+                new LocalizedContent(firstLanguageCode, "this is english content"),
+                new LocalizedContent(secondLanguageCode, "this is another content")
+            };
+
+            var contentsTwo = new[]
+            {
+                new LocalizedContent(thirdLanguageCode, "this is english content"),
+                new LocalizedContent(fourthLanguageCode, "this is another content")
+            };
+
+            var firstObj = new TestClassB
+            {
+                PropertyA = contentsOne.First().Serialize(),
+                PropertyB = contentsOne.Last().Serialize()
+            };
+
+            var secondObj = new TestClassB
+            {
+                PropertyA = contentsTwo.First().Serialize(),
+                PropertyB = contentsTwo.Last().Serialize()
+            };
+
+            const string localizationRequestLanguage = "en";
+            firstObj.Localize(localizationRequestLanguage);
+            secondObj.Localize(localizationRequestLanguage);
+
+            Assert.Equal("this is english content", firstObj.PropertyA);
+            Assert.Equal("this is another content", firstObj.PropertyB);
+            Assert.Equal("this is english content", secondObj.PropertyA);
+            Assert.Equal("this is another content", secondObj.PropertyB);
+        }
+
+        [Fact]
+        public void LocalizeItem_PropertyHasDifferentCasesAndUpperCaseIsRequested_LocalizesAllProperties()
+        {
+            const string firstLanguageCode = "EN";
+            const string secondLanguageCode = "En";
+            const string thirdLanguageCode = "eN";
+            const string fourthLanguageCode = "en";
+
+            var contentsOne = new[]
+            {
+                new LocalizedContent(firstLanguageCode, "this is english content"),
+                new LocalizedContent(secondLanguageCode, "this is another content")
+            };
+
+            var contentsTwo = new[]
+            {
+                new LocalizedContent(thirdLanguageCode, "this is english content"),
+                new LocalizedContent(fourthLanguageCode, "this is another content")
+            };
+
+            var firstObj = new TestClassB
+            {
+                PropertyA = contentsOne.First().Serialize(),
+                PropertyB = contentsOne.Last().Serialize()
+            };
+
+            var secondObj = new TestClassB
+            {
+                PropertyA = contentsTwo.First().Serialize(),
+                PropertyB = contentsTwo.Last().Serialize()
+            };
+
+            const string localizationRequestLanguage = "EN";
+            firstObj.Localize(localizationRequestLanguage);
+            secondObj.Localize(localizationRequestLanguage);
+
+            Assert.Equal("this is english content", firstObj.PropertyA);
+            Assert.Equal("this is another content", firstObj.PropertyB);
+            Assert.Equal("this is english content", secondObj.PropertyA);
+            Assert.Equal("this is another content", secondObj.PropertyB);
+        }
+
+        [Fact]
         public void LocalizeCollection_MultiplePropertiesNoParamsSpecified_LocalizesCorrectly()
         {
             var localizedField = GetLocalizedContent();
 
-            var testClasses = new []
+            var testClasses = new[]
             {
                 new TestClassA {PropertyA = localizedField, PropertyB = localizedField},
                 new TestClassA {PropertyA = localizedField, PropertyB = localizedField}
